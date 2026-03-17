@@ -1,0 +1,27 @@
+# Stage 4: pyproject.toml first, source last — cache works correctly now
+# Size: ~600MB
+# Fast repeat builds, gcc still in prod, root
+
+FROM python:3.13-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy ONLY the dependency file first
+# As long as pyproject.toml doesn't change, everything below is cached
+# asyncpg C compilation only reruns when you actually change a dependency
+COPY pyproject.toml .
+
+RUN pip install --no-cache-dir asyncpg uvicorn fastapi
+
+# Source code copied last
+# Changing main.py only reruns this COPY — not the pip install above
+COPY . .
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
