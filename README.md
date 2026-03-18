@@ -29,13 +29,14 @@ This repository is designed to help you:
 
 ---
 ### Note : The original Dockerfile doesn't need venv, as the backend itself is not complex. Doing it increases image build time.**Not every complex solution is Best fit ! Stick to the Needs**
+---
 ## 🐳 How to Use
 
 Interact with this project **only through Docker**, for example:
 
 ```bash
 # Build the Docker image
-docker build -t backend-optimization .
+docker build -f <docker_file> -t backend-optimization .
 
 # Run the container (if applicable to your exercise)
 docker run backend-optimization
